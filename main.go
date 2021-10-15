@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 
 	"fyne.io/fyne/v2"
@@ -25,9 +26,10 @@ func (d *doubleTappableLabel) DoubleTapped(_ *fyne.PointEvent) {
 	log.Printf("DoubleTapped: %v", d.Text)
 }
 
-const USE_DOUBLE_TAPPABLE_LABEL = true
-
 func main() {
+	var useDoubleTappableLabel = flag.Bool("d", false, "use double tappable list items")
+	flag.Parse()
+	log.Printf("useDoubleTappableLabel: %v", *useDoubleTappableLabel)
 	myApp := app.New()
 	myWindow := myApp.NewWindow("List Widget")
 
@@ -36,14 +38,14 @@ func main() {
 			return len(data)
 		},
 		func() fyne.CanvasObject {
-			if USE_DOUBLE_TAPPABLE_LABEL {
+			if *useDoubleTappableLabel {
 				return newDoubleTappableLabel("template")
 			} else {
 				return widget.NewLabel("template")
 			}
 		},
 		func(i widget.ListItemID, o fyne.CanvasObject) {
-			if USE_DOUBLE_TAPPABLE_LABEL {
+			if *useDoubleTappableLabel {
 				o.(*doubleTappableLabel).SetText(data[i])
 			} else {
 				o.(*widget.Label).SetText(data[i])
